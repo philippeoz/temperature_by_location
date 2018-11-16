@@ -57,6 +57,6 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
-# API Keys
-GOOGLE_API_KEY = config('GOOGLE_API_KEY', cast=str)
-DARK_SKY_API_KEY = config('DARK_SKY_API_KEY', cast=str)
+# API Keys and URLs
+GOOGLE_API_KEY = config('GOOGLE_API_KEY')
+DARK_SKY_API_KEY = config('DARK_SKY_API_KEY')
