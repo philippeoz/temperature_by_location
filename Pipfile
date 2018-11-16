@@ -7,6 +7,10 @@ name = "pypi"
 
 [packages]
 django = "*"
+python-decouple = "*"
+unipath = "*"
+dj-database-url = "*"
+"psycopg2-binary" = "*"
 
 [requires]
 python_version = "3.6"
