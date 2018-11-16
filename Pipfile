@@ -12,6 +12,7 @@ unipath = "*"
 dj-database-url = "*"
 "psycopg2-binary" = "*"
 requests = "*"
+gunicorn = "*"
 
 [requires]
 python_version = "3.6"

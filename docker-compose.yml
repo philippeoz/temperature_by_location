@@ -1,0 +1,41 @@
+version: '2'  
+services:  
+  nginx:
+    image: nginx:latest
+    container_name: temperature_nginx
+    ports:
+      - "80:8000"
+    volumes:
+      - ./app:/app
+      - ./config/nginx:/etc/nginx/conf.d
+      - static-data:/staticfiles
+      - media-data:/mediafiles
+    depends_on:
+      - django
+    restart: always
+
+  django:
+    build: .
+    container_name: temperature_django
+    command: bash -c "/wait_for_it.sh db:5432 && /django_start.sh"
+    depends_on:
+      - db
+    volumes:
+      - ./app:/app
+      - static-data:/app/frontend/staticfiles
+      - media-data:/app/media
+    expose:
+      - "8000"
+    restart: always
+    env_file:
+      - settings.env
+
+  db:
+    image: postgres:latest
+    container_name: temperature_postgres
+    environment:         
+      - POSTGRES_DB=postgres
+
+volumes:
+  static-data:
+  media-data:
