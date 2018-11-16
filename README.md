@@ -2,7 +2,7 @@
 Simple web application that allows users to view the current temperature at a given
 location.
 
-[Aqui temos uma demo. (Temporary)](http://temperature.valfok.com)
+[Demo. (Temporary)](http://temperature.valfok.com)
 
 This application was developed in Python 3.6, using Django, PostgreSQL, Docker, docker-compose and nginx.
 
