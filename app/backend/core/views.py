@@ -12,11 +12,12 @@ class TemperatureByLocationFormView(FormView):
     success_url = reverse_lazy('home')
 
     def form_valid(self, form):
-        self.request.session['search_data'] = form.result
+        result = form.result
         ip = self.request.META.get('HTTP_X_FORWARDED_FOR', None)
-        IPRequestLog.objects.create(
-            ip=ip or self.request.META.get('REMOTE_ADDR')
-        )
+        ip = ip or self.request.META.get('REMOTE_ADDR')
+        IPRequestLog.objects.create(ip=ip)
+        result['usage_count'] = IPRequestLog.objects.filter(ip=ip).count()
+        self.request.session['search_data'] = result
         return super().form_valid(form)
     
     def form_invalid(self, form):

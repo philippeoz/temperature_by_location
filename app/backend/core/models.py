@@ -6,7 +6,7 @@ from django.utils.translation import gettext as _
 class IPRequestLog(models.Model):
     """Model definition for IPRequestLog."""
 
-    ip = models.CharField(max_length=15)
+    ip = models.CharField(max_length=50)
     created_at = models.DateTimeField(auto_now=False, auto_now_add=True)
 
     class Meta:

@@ -19,6 +19,12 @@
           </div>
         {% endfor %}
       {% endif %}
+
+      {% if request.session.search_data %}
+        <div class="alert alert-info" role="alert">
+            This IP has used the system for {{ request.session.search_data.usage_count }} times.
+        </div>
+      {% endif %}
         
       <div class="row">
         <div class="col-md-12">
