@@ -4,6 +4,22 @@
 {% block content %}
   <main role="main">
     <div class="container mt-5">
+      
+      {% if form.errors %}
+        {% for field in form %}
+          {% for error in field.errors %}
+            <div class="alert alert-danger" role="alert">
+              {{ error|escape }} Please, try again.
+            </div>
+          {% endfor %}
+        {% endfor %}
+        {% for error in form.non_field_errors %}
+          <div class="alert alert-danger" role="alert">
+              {{ error|escape }} Please, try again.
+          </div>
+        {% endfor %}
+      {% endif %}
+        
       <div class="row">
         <div class="col-md-12">
           <div class="card mb-4 shadow-sm">
@@ -11,10 +27,12 @@
               <h4 class="my-0 font-weight-normal">Find Temperature For Location</h4>
             </div>
             <div class="card-body">
-              <form>{% csrf_token %}
+              <form method="POST">{% csrf_token %}
                 <div class="form-group">
-                  <label for="{{ form.location.auto_id }}">{{ form.location.label }}</label>
-                  {{ form.location }}
+                  <label for="id_location">{{ form.location.label }}</label>
+                  <input type="text" name="location" class="form-control" required="" id="id_location"
+                  value="{% if request.session.search_data %}{{ request.session.search_data.input_data }}{% endif %}"
+                  >
                   <small class="form-text text-muted">
                     You can enter any type of content, such as name of the city or zipcode.
                   </small>
@@ -22,13 +40,27 @@
                 <button type="submit" class="btn btn-primary">Show Temperature</button>
               </form>
             </div>
-            <div class="card-footer text-muted">
-              Philippe
-            </div>
+            {% if request.session.search_data %}
+              <div class="card-footer">
+                <h4 class="my-0 font-weight-normal">
+                  Temperature at <i>{{ request.session.search_data.formatted_address }}</i> is 
+                  <strong>{{ request.session.search_data.temperature }}</strong>.
+                </h4>
+              </div>
+            {% endif %}
           </div>
         </div>
       </div>
     </div>
   </main>
 {% endblock content %}
+
+{% block css %}
+  <style>
+    .card-footer {
+      text-align: center;
+    }
+  </style>  
+{% endblock css %}
+  
     

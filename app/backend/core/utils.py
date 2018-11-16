@@ -3,6 +3,10 @@ import requests
 from django.conf import settings
 from django.utils.translation import gettext as _
 
+from backend.core.models import TemperatureRequestCache
+
+from decimal import Decimal
+
 
 class APIClient:
     """
@@ -11,6 +15,40 @@ class APIClient:
 
     geocode_api_key = settings.GOOGLE_API_KEY
     dark_sky_api_key = settings.DARK_SKY_API_KEY
+
+    @classmethod
+    def get_or_create_temperature_info(cls, location):
+        """ 
+        Check if exists a recent data in database 
+        before check a new temperature information
+        """
+        TemperatureRequestCache.clear_created_more_than_an_hour_ago()
+
+        location_data = cls.latitude_longitude_from_address(location)
+
+        queryset = TemperatureRequestCache.objects.filter(
+            latitude=location_data.get('latitude'),
+            longitude=location_data.get('longitude')
+        )
+
+        if queryset.exists():
+            data = queryset.last()
+            temperature = data.temperature
+        else:
+            temperature = cls.temperature_from_coordinates(
+                location_data.get('latitude'), location_data.get('longitude')
+            )
+            TemperatureRequestCache.objects.create(
+                temperature=Decimal(temperature),
+                latitude=location_data.get('latitude'),
+                longitude=location_data.get('longitude')
+            )
+        
+        return {
+            'formatted_address': location_data.get('formatted_address'),
+            'temperature': f'{temperature}° C',
+            'input_data': location
+        }
 
     @classmethod
     def geocode_api_url(cls, address):
@@ -40,7 +78,7 @@ class APIClient:
             )
         
         response = requests.get(
-            cls.dark_sky_api_url(latitude, longitude), params={'units': 'auto'}
+            cls.dark_sky_api_url(latitude, longitude), params={'units': 'si'}
         )
 
         if response.status_code != 200:
