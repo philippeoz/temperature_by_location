@@ -6,9 +6,15 @@ location.
 
 This application was developed in Python 3.6, using Django, PostgreSQL, Docker, docker-compose and nginx.
 
+1. Use the Google Geocoding API to get the latitude/longitude for a given user input, as well as the city and state name.
+2. Use the Dark Sky API to get the temperature for a given latitude/longitude.
+3. Assume the temperature doesn't vary within the same latitude/longitude, with three decimal cases precision, within an 1-hour window.
+4. Track service usage by IP (how many times this IP used the service).
+5. Export service usage by IP for each day through a custom management command. With JSON format.
+
 #### How to Setup
 Clone:
--  `git clone https://github.com/philippeoz/myprofile.git`
+-  `git clone https://github.com/philippeoz/temperature_by_location.git`
 
 We have two ways to run:
 -  With Docker:
